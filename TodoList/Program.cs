@@ -1,33 +1,101 @@
 ﻿
-Console.WriteLine("Provide a number.");
-string userInput = Console.ReadLine();
-int number= int.Parse(userInput);
-Console.WriteLine(number);
-//Console.WriteLine("See all TODOs");
-//Console.WriteLine("Add todo");
-//Console.WriteLine("Remove todo");
-//Console.WriteLine("Exit");
+var todos = new List<string>();
+
+bool shallExit = false;
+while (!shallExit)
+{
+    Console.WriteLine("What do you want to do?");
+    Console.WriteLine("[S]ee all todos");
+    Console.WriteLine("[A]dd a todo");
+    Console.WriteLine("[R]emove a todo");
+    Console.WriteLine("[E]xit");
 
 
+    var userChoice = Console.ReadLine();
+    switch (userChoice)
+    {
+        case "E":
+        case "e":
+            shallExit = true;
+            break;
+        case "S":
+        case "s":
+            SeeAllTodos();
+            break;
+        case "A":
+        case "a":
+            AddTodo();
+            break;
+        case "R":
+        case "r":
+            RemoveTodo();
+            break;
 
-//var userChoice = Console.ReadLine();
-//bool isLong=IsLong(userChoice);
+        default:
+            Console.WriteLine("Invalid choice");
+            break;
 
-//bool IsLong(string input)
-//{
-//    return input.Length > 10;
-//}
+    }
+}
+Console.ReadKey();
 
-//var result = Add(10, 5);
+void AddTodo()
+{
+    bool isValidDescrpiton = false;
+    while (!isValidDescrpiton)
+    {
+        Console.WriteLine("enter the TODO description:");
+        var descrpiton = Console.ReadLine();
+        if (descrpiton == "")
+        { Console.WriteLine("The description cannot be empty"); }
+        else if (todos.Contains(descrpiton)) { Console.WriteLine("The description must be uniqe"); }
+        else
+        {
+            isValidDescrpiton = true;
+            todos.Add(descrpiton);
+        }
+    }
+}
 
-//Console.WriteLine("10+5=" + result);
 
-//int Add(int a, int b)
-//{ return a + b; }
+void SeeAllTodos()
+{
+    if (todos.Count == 0)
+    {
+        Console.WriteLine("No Todos have been added yet.");
+    }
+    else
+    {
+        for (int i = 0; i < todos.Count; i++)
+        { Console.WriteLine($"{i + 1}.{todos[i]}"); }
+    }
+}
 
 
-//bool isLong(string input)
-//{
-//    return input.Length > 10;
+void RemoveTodo()
+{
+    if (todos.Count == 0)
+    {
+        Console.WriteLine("No TODOs have benn added");
+        return;
+    }
 
-//}
+
+    bool isIndexVaild = false;
+    while (!isIndexVaild)
+    {
+        Console.WriteLine("Select the index of to do you want to remove");
+        SeeAllTodos();
+        var userInput = Console.ReadLine();
+        if (userInput == "") { Console.WriteLine("Selected index cannot be empty"); continue; }
+        if (int.TryParse(userInput, out int index) && index >= 1 && index <= todos.Count)
+        { var todoToBeRemoved = todos[index - 1];
+            var indexOfTodo = index - 1;
+            var todoTobeRemoved = todos[indexOfTodo];
+            todos.RemoveAt(index - 1);
+            isIndexVaild = true;
+            Console.WriteLine("TODO removed" + todoToBeRemoved);
+        }
+        else { Console.WriteLine("The given index is not valid"); }
+    }
+}
